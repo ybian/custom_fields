@@ -20,17 +20,17 @@ Gem::Specification.new do |s|
   s.rubyforge_project         = 'nowarning'
 
   s.add_dependency 'mongoid',             '~> 4.0.0'
-  s.add_dependency 'activesupport',       '~> 4.1.5'
-  s.add_dependency 'carrierwave-mongoid', '~> 0.7'
+  s.add_dependency 'activesupport',       '~> 4.1.6'
+  s.add_dependency 'carrierwave-mongoid', '~> 0.7.1'
   s.add_dependency 'money',               '~> 5.1.1'
 
-  s.add_development_dependency('yard', ['~> 0.7.3'])
-  s.add_development_dependency('mocha', ['~> 0.9.12'])
-  s.add_development_dependency('rspec', ['~> 2.99'])
+  s.add_development_dependency('yard', ['~> 0.8.7'])
+  s.add_development_dependency('mocha', ['~> 1.1.0'])
+  s.add_development_dependency('rspec', ['~> 3.1'])
   s.add_development_dependency('rspec-its', ['~> 1.0.1'])
-  s.add_development_dependency('simplecov', ['~> 0.6.1'])
-  s.add_development_dependency('database_cleaner', ['~> 0.9.1'])
-  s.add_development_dependency('pry')
+  s.add_development_dependency('simplecov', ['~> 0.9.1'])
+  s.add_development_dependency('database_cleaner', ['~> 1.3.0'])
+  s.add_development_dependency('pry-byebug', ['~> 2.0.0'])
   s.add_development_dependency('RedCloth', ['~> 4.2.8'])
 
   s.files        = Dir[ 'init.rb',

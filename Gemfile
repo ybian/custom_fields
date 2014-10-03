@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-source 'https://rubygems.org'
+source 'http://ruby.taobao.org'
 
 gemspec # Include gemspec dependencies
 
