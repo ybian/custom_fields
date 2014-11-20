@@ -340,6 +340,7 @@ module CustomFields
 
         unless source.const_defined?(klass_name)
           (klass = Class.new(::CustomFields::Field)).class_eval <<-EOF
+            include ::Mongoid::Attributes::Dynamic
             embedded_in :#{self.name.demodulize.underscore}, inverse_of: :#{name}_custom_fields, class_name: '#{self.name}'
           EOF
 
