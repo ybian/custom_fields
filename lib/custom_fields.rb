@@ -42,6 +42,7 @@ end
      types/email
      types/date
      types/date_time
+     types/color
      types/boolean
      types/file
      types/select
