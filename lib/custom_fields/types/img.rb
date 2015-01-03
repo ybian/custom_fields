@@ -2,7 +2,7 @@ module CustomFields
 
   module Types
 
-    module File
+    module Img
 
       module Field; end
 
@@ -17,17 +17,13 @@ module CustomFields
           # @param [ Class ] klass The class to modify
           # @param [ Hash ] rule It contains the name of the field and if it is required or not
           #
-          def apply_file_custom_field(klass, rule)
+          def apply_img_custom_field(klass, rule)
             name = rule['name']
 
-            klass.mount_uploader name, FileUploader
+            klass.mount_uploader name, ImgUploader
 
             if rule['localized'] == true
               klass.replace_field name, ::String, true
-            end
-
-            if rule['required']
-              klass.validates_presence_of name
             end
           end
 
@@ -38,7 +34,7 @@ module CustomFields
           #
           # @return [ Hash ] field name => url or empty hash if no file
           #
-          def file_attribute_get(instance, name)
+          def img_attribute_get(instance, name)
             if instance.send(:"#{name}?") #"
               value = instance.send(name.to_sym).url
               { name => value, "#{name}_url" => value }
@@ -64,11 +60,56 @@ module CustomFields
 
       end
 
-      class FileUploader < ::CarrierWave::Uploader::Base
-        storage :grid_fs
+      class ImgUploader < ::CarrierWave::Uploader::Base
+        # Include RMagick or MiniMagick support:
+        # include CarrierWave::RMagick
+        include CarrierWave::MiniMagick
 
+        # Choose what kind of storage to use for this uploader:
+        storage :grid_fs
+        # storage :fog
+
+        # Override the directory where uploaded files will be stored.
+        # This is a sensible default for uploaders that are meant to be mounted:
         def store_dir
           "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
+        end
+
+        # Provide a default URL as a default if there hasn't been a file uploaded:
+        # def default_url
+        #   # For Rails 3.1+ asset pipeline compatibility:
+        #   # ActionController::Base.helpers.asset_path("fallback/" + [version_name, "default.png"].compact.join('_'))
+        #
+        #   "/images/fallback/" + [version_name, "default.png"].compact.join('_')
+        # end
+
+        # Process files as they are uploaded:
+        # process :scale => [200, 300]
+        #
+        # def scale(width, height)
+        #   # do something
+        # end
+
+        # Create different versions of your uploaded files:
+        # version :thumb do
+        #   process :resize_to_fit => [50, 50]
+        # end
+        # Process files as they are uploaded:
+        process resize_to_limit: [1000, 1000]
+
+        # Create different versions of your uploaded files:
+        version :medium do
+          process resize_to_limit: [400, 400]
+        end
+
+        version :small do
+          process resize_to_limit: [200, 200]
+        end
+
+        # Add a white list of extensions which are allowed to be uploaded.
+        # For images you might use something like this:
+        def extension_white_list
+          %w(jpg jpeg gif png)
         end
 
         def filename

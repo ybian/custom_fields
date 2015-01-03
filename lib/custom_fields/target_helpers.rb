@@ -167,6 +167,7 @@ module CustomFields
       when :select                    then [name, "#{name}_id"]
       when :date, :date_time, :money  then "formatted_#{name}"
       when :file                      then "#{name}_url"
+      when :img                       then "#{name}_url"
       when :belongs_to                then "#{name}_id"
       else
         name

@@ -45,6 +45,7 @@ end
      types/color
      types/boolean
      types/file
+     types/img
      types/select
      types/integer
      types/float
