@@ -24,10 +24,10 @@ module CustomFields
     field :localized, type: ::Boolean, default: false
 
     ## validations ##
-    validates_presence_of   :label, :type
+    validates_presence_of   :type
     validates_exclusion_of  :name, in: lambda { |f| CustomFields.options[:reserved_names].map(&:to_s) }
     validates_inclusion_of  :type, in: AVAILABLE_TYPES, allow_blank: true
-    validates_format_of     :name, with: /^[a-z]([A-Za-z0-9_]+)?$/, multiline: true
+    #validates_format_of     :name, with: /^[a-z]([A-Za-z0-9_]+)?$/, multiline: true
     validate                :uniqueness_of_label_and_name
 
     ## callbacks ##
@@ -77,10 +77,16 @@ module CustomFields
       super(options).merge(custom_as_json)
     end
 
+    alias_method :orig_label, :label
+
+    def label
+      self.orig_label || self.name
+    end
+
     protected
 
     def uniqueness_of_label_and_name
-      if self.siblings.any? { |f| f.label == self.label && f._id != self._id }
+      if self.siblings.any? { |f| !f.label.empty? && f.label == self.label && f._id != self._id }
         self.errors.add(:label, :taken)
       end
 
