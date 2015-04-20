@@ -272,7 +272,7 @@ module CustomFields
         class_eval do
           field :"#{name}_custom_fields_version", type: ::Integer, default: 0
 
-          embeds_many :"#{name}_custom_fields", class_name: self.dynamic_custom_field_class_name(name) #, cascade_callbacks: true # FIXME ?????
+          embeds_many :"#{name}_custom_fields", class_name: self.dynamic_custom_field_class_name(name), order: :position.asc #, cascade_callbacks: true # FIXME ?????
 
           accepts_nested_attributes_for :"#{name}_custom_fields", allow_destroy: true
         end
