@@ -115,7 +115,19 @@ module CustomFields
         def filename
           return nil unless original_filename
           @name ||= Digest::MD5.hexdigest(cache_id)
-          "#{@name}.#{file.extension}"
+          extension = nil
+          if file.respond_to? :extension
+            extension = file.extension
+          else
+            path_elements = path.split('.')
+            extension = path_elements.last if path_elements.size > 1
+          end
+
+          if extension
+            "#{@name}.#{extension}"
+          else
+            "#{@name}"
+          end
         end
       end
 
