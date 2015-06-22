@@ -13,3 +13,5 @@ gem 'bson'
 platforms :mri_18 do
   gem 'SystemTimer'
 end
+
+gem 'mini_magick'

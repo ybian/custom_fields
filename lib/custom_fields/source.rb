@@ -62,12 +62,24 @@ module CustomFields
     # @return [ Array ] An array of hashes
     #
     def custom_fields_recipe_for(name)
-      {
-        'name'     => "#{self.relations[name.to_s].class_name.demodulize}#{self._id}",
+      recipe = {
         'rules'    => self.ordered_custom_fields(name).map(&:to_recipe),
-        'version'  => self.custom_fields_version(name),
-        'model_name' => self.relations[name.to_s].class_name.constantize.model_name.to_s
+        'version'  => self.custom_fields_version(name)
       }
+      pre_defined_class = self.send(:"pre_defined_#{name}_class")
+      if pre_defined_class
+        recipe.merge!({
+          'pre_defined' => pre_defined_class,
+          'name'     => "#{pre_defined_class.demodulize}#{self._id}",
+          'model_name' => pre_defined_class.constantize.model_name.to_s
+        })
+      else
+        recipe.merge!({
+          'pre_defined' => false,
+          'name'     => "#{self.relations[name.to_s].class_name.demodulize}#{self._id}",
+          'model_name' => self.relations[name.to_s].class_name.constantize.model_name.to_s
+        })
+      end
     end
 
     # Returns the number of the version for relation with custom fields
@@ -278,6 +290,7 @@ module CustomFields
         end
 
         class_eval <<-EOV
+          field :pre_defined_#{name}_class, type: String
           after_initialize  :refresh_#{name}_metadata
           before_update     :bump_#{name}_custom_fields_version
           before_update     :collect_#{name}_custom_fields_diff

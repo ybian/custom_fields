@@ -38,7 +38,8 @@ module CustomFields
       def build_klass_with_custom_fields(recipe)
         name = recipe['name']
         # puts "CREATING #{name}, #{recipe.inspect}" # DEBUG
-        parent.const_set(name, Class.new(self)).tap do |klass|
+        base_class = recipe['pre_defined'] ? recipe['pre_defined'].constantize : self
+        parent.const_set(name, Class.new(base_class)).tap do |klass|
           klass.cattr_accessor :version
 
           klass.version = recipe['version']
